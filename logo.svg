@@ -13,18 +13,18 @@
     </linearGradient>
   </defs>
 
-  <!-- Hexagon (flat-top) -->
+  <!-- Flat-top hexagon: top edge aligns with top of Chinese, bottom edge aligns with bottom of English -->
   <polygon
-    points="74,40 57,11 23,11 6,40 23,69 57,69"
+    points="27,8 54,8 68,34 54,60 27,60 13,34"
     fill="url(#hexGrad)"
     filter="url(#glow)"
     stroke="#00BFFF"
     stroke-width="1"
   />
 
-  <!-- Letter C — 48px, precisely centered in hexagon -->
+  <!-- Letter C — 48px, centered in hexagon -->
   <text
-    x="40" y="40"
+    x="40" y="34"
     font-family="Arial, sans-serif"
     font-size="48"
     font-weight="800"
@@ -33,24 +33,24 @@
     dominant-baseline="central"
   >C</text>
 
-  <!-- Chinese name — modest letter-spacing, font-size 20 -->
+  <!-- Chinese name — top aligns with hexagon top (y≈8) -->
   <text
-    x="90" y="28"
+    x="85" y="28"
     font-family="'PingFang TC', 'Microsoft JhengHei', Arial, sans-serif"
-    font-size="20"
+    font-size="23"
     font-weight="700"
     fill="white"
     letter-spacing="3"
   >恆煦電子材料股份有限公司</text>
 
-  <!-- English name — scaled to match Chinese width, letter-spacing unchanged -->
+  <!-- English name — bottom aligns with hexagon bottom (y≈60), matches Chinese width -->
   <text
-    x="90" y="57"
+    x="85" y="57"
     font-family="Arial, 'Segoe UI', sans-serif"
-    font-size="15"
+    font-size="17"
     font-weight="400"
     fill="#8ba5c4"
-    textLength="282"
+    textLength="309"
     lengthAdjust="spacingAndGlyphs"
   >Consistent Electronic Materials, Inc.</text>
 </svg>
