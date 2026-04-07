@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CEMI — Consistent Electronic Materials, Inc.</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy: #0b1f3a; --blue: #1a4f8a; --accent: #00a8e8;
+      --light: #f4f7fb; --white: #ffffff; --gray: #6b7a90;
+      --border: #dde3ed; --text: #1c2b3a;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; color: var(--text); background: var(--white); line-height: 1.7; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      background: rgba(11,31,58,0.97); backdrop-filter: blur(8px);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 6vw; height: 64px;
+    }
+    .nav-logo { display: flex; align-items: center; text-decoration: none; }
+    .nav-logo img { height: 36px; width: auto; background: #fff; border-radius: 6px; padding: 4px 10px; }
+    .nav-right { display: flex; align-items: center; gap: 32px; }
+    .nav-links { display: flex; gap: 28px; list-style: none; }
+    .nav-links a { color: #a8bedc; text-decoration: none; font-size: 14px; font-weight: 500; transition: color .2s; }
+    .nav-links a:hover { color: var(--white); }
+
+    /* Language Switcher */
+    .lang-switcher { display: flex; gap: 6px; }
+    .lang-btn {
+      display: flex; align-items: center; gap: 5px;
+      padding: 5px 10px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.18);
+      background: transparent; color: #a8bedc; font-size: 12px; font-weight: 600;
+      cursor: pointer; transition: all .2s; letter-spacing: 0.04em;
+    }
+    .lang-btn:hover { border-color: var(--accent); color: var(--white); }
+    .lang-btn.active { background: rgba(0,168,232,0.15); border-color: var(--accent); color: var(--white); }
+    .lang-btn .flag { font-size: 16px; line-height: 1; }
+
+    /* ── HERO ── */
+    #home {
+      min-height: 100vh;
+      background: linear-gradient(155deg, var(--navy) 0%, #0d2d52 55%, #10406e 100%);
+      display: flex; align-items: center; padding: 120px 6vw 80px; position: relative; overflow: hidden;
+    }
+    #home::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse 60% 60% at 70% 50%, rgba(0,168,232,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; max-width: 1200px; width: 100%; }
+    .hero-tag {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(0,168,232,0.12); border: 1px solid rgba(0,168,232,0.3);
+      border-radius: 20px; padding: 4px 14px;
+      font-size: 12px; font-weight: 600; color: var(--accent);
+      letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 24px;
+    }
+    .hero-tag::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+    h1 { font-size: clamp(32px, 4vw, 52px); font-weight: 800; color: var(--white); line-height: 1.15; margin-bottom: 20px; letter-spacing: -0.02em; }
+    h1 em { font-style: normal; color: var(--accent); }
+    .hero-sub { font-size: 17px; color: #8ba5c4; line-height: 1.75; margin-bottom: 40px; max-width: 500px; }
+    .btn-row { display: flex; gap: 14px; flex-wrap: wrap; }
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 13px 28px; border-radius: 8px; font-size: 14px; font-weight: 600; text-decoration: none; transition: all .2s; cursor: pointer; border: none; }
+    .btn-primary { background: var(--accent); color: var(--navy); }
+    .btn-primary:hover { background: #33bbf4; transform: translateY(-1px); }
+    .btn-outline { background: transparent; color: var(--white); border: 1px solid rgba(255,255,255,0.25); }
+    .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+    .hero-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .stat-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 24px 20px; backdrop-filter: blur(4px); }
+    .stat-number { font-size: 36px; font-weight: 800; color: var(--white); line-height: 1; margin-bottom: 6px; letter-spacing: -0.02em; }
+    .stat-number span { font-size: 20px; color: var(--accent); }
+    .stat-label { font-size: 12px; color: #8ba5c4; font-weight: 500; letter-spacing: 0.04em; }
+
+    /* ── SECTIONS ── */
+    section { padding: 96px 6vw; }
+    .section-inner { max-width: 1200px; margin: 0 auto; }
+    .section-tag { font-size: 11px; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 12px; }
+    h2 { font-size: clamp(26px, 3vw, 40px); font-weight: 800; color: var(--navy); line-height: 1.2; letter-spacing: -0.02em; margin-bottom: 16px; }
+    .section-lead { font-size: 17px; color: var(--gray); max-width: 640px; line-height: 1.75; margin-bottom: 56px; }
+
+    /* ── ABOUT ── */
+    #about { background: var(--light); }
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start; }
+    .about-text p { color: var(--gray); margin-bottom: 18px; font-size: 15.5px; line-height: 1.8; }
+
+    /* Founder cards */
+    .founders { display: flex; gap: 16px; margin-top: 32px; }
+    .founder-card {
+      flex: 1; background: var(--white); border: 1px solid var(--border);
+      border-radius: 12px; padding: 20px; text-align: center;
+    }
+    .founder-avatar {
+      width: 52px; height: 52px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--blue), var(--accent));
+      display: grid; place-items: center; font-size: 18px;
+      font-weight: 700; color: var(--white); margin: 0 auto 12px;
+    }
+    .founder-name { font-size: 14px; font-weight: 700; color: var(--navy); }
+    .founder-name-zh { font-size: 12px; color: var(--gray); margin-top: 2px; }
+    .founder-role { font-size: 12px; color: var(--accent); font-weight: 600; margin-top: 4px; }
+
+    .specs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .spec-card { background: var(--white); border: 1px solid var(--border); border-radius: 10px; padding: 20px 18px; }
+    .spec-value { font-size: 22px; font-weight: 800; color: var(--navy); line-height: 1; margin-bottom: 4px; }
+    .spec-unit { font-size: 13px; color: var(--accent); font-weight: 600; }
+    .spec-label { font-size: 12px; color: var(--gray); margin-top: 4px; }
+    .cert-row { display: flex; gap: 12px; margin-top: 14px; }
+    .cert-badge { flex: 1; background: linear-gradient(135deg, var(--navy), var(--blue)); border-radius: 10px; padding: 16px; color: var(--white); }
+    .cert-badge .cert-name { font-size: 13px; font-weight: 700; margin-bottom: 4px; }
+    .cert-badge .cert-desc { font-size: 11px; color: #8ba5c4; line-height: 1.5; }
+
+    /* ── PRODUCTS ── */
+    #products { background: var(--white); }
+    .products-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .product-card { border: 1px solid var(--border); border-radius: 14px; padding: 28px 24px; transition: box-shadow .2s, transform .2s; position: relative; overflow: hidden; }
+    .product-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--blue), var(--accent)); }
+    .product-card:hover { box-shadow: 0 8px 32px rgba(0,0,0,0.08); transform: translateY(-2px); }
+    .product-icon { width: 44px; height: 44px; border-radius: 10px; background: linear-gradient(135deg, rgba(26,79,138,0.1), rgba(0,168,232,0.1)); display: grid; place-items: center; font-size: 20px; margin-bottom: 18px; }
+    .product-name { font-size: 16px; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+    .product-type { display: inline-block; font-size: 11px; font-weight: 600; color: var(--accent); background: rgba(0,168,232,0.08); border-radius: 4px; padding: 2px 8px; margin-bottom: 12px; letter-spacing: 0.04em; }
+    .product-desc { font-size: 14px; color: var(--gray); line-height: 1.7; }
+    .services-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }
+    .service-card { background: var(--navy); border-radius: 14px; padding: 32px 28px; color: var(--white); }
+    .service-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 10px; color: var(--white); }
+    .service-card p { font-size: 14px; color: #8ba5c4; line-height: 1.7; }
+
+    /* ── EQUIPMENT ── */
+    #equipment { background: var(--light); }
+    .equip-tabs { display: flex; gap: 8px; margin-bottom: 40px; }
+    .equip-tab { padding: 10px 22px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; border: 1px solid var(--border); background: var(--white); color: var(--gray); transition: all .2s; }
+    .equip-tab.active { background: var(--navy); color: var(--white); border-color: var(--navy); }
+    .equip-panel { display: none; }
+    .equip-panel.active { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .equip-item { background: var(--white); border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px; display: flex; align-items: flex-start; gap: 14px; }
+    .equip-num { min-width: 28px; height: 28px; border-radius: 6px; background: var(--navy); color: var(--white); font-size: 12px; font-weight: 700; display: grid; place-items: center; }
+    .equip-name { font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 2px; }
+    .equip-zh { font-size: 12px; color: var(--gray); }
+    .equip-qty { margin-left: auto; font-size: 11px; font-weight: 600; color: var(--accent); white-space: nowrap; }
+
+    /* ── CONTACT ── */
+    #contact { background: var(--navy); }
+    #contact h2 { color: var(--white); }
+    #contact .section-tag { color: var(--accent); }
+    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: start; }
+    .contact-info { display: flex; flex-direction: column; gap: 20px; }
+    .contact-item { display: flex; align-items: flex-start; gap: 16px; }
+    .contact-item-icon { min-width: 40px; height: 40px; border-radius: 8px; background: rgba(0,168,232,0.15); display: grid; place-items: center; font-size: 16px; }
+    .contact-item-label { font-size: 11px; font-weight: 600; color: var(--accent); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
+    .contact-item-value { font-size: 15px; color: var(--white); }
+    .contact-item-value a { color: var(--white); text-decoration: none; }
+    .contact-item-value a:hover { color: var(--accent); }
+    .map-box { border-radius: 14px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); }
+    .map-box iframe { display: block; width: 100%; height: 300px; border: none; filter: grayscale(20%); }
+    .map-label { padding: 14px 18px; font-size: 13px; color: #8ba5c4; border-top: 1px solid rgba(255,255,255,0.08); }
+
+    /* ── FOOTER ── */
+    footer { background: #061525; padding: 28px 6vw; display: flex; align-items: center; justify-content: space-between; }
+    .footer-left { font-size: 13px; color: #4a6580; }
+    .footer-left strong { color: #8ba5c4; }
+    .footer-right { font-size: 12px; color: #364d60; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .hero-grid, .about-grid, .contact-grid { grid-template-columns: 1fr; gap: 40px; }
+      .products-grid { grid-template-columns: 1fr 1fr; }
+      .services-row { grid-template-columns: 1fr; }
+      .equip-panel.active { grid-template-columns: 1fr; }
+      footer { flex-direction: column; gap: 8px; text-align: center; }
+    }
+    @media (max-width: 600px) {
+      .products-grid { grid-template-columns: 1fr; }
+      .specs-grid { grid-template-columns: 1fr 1fr; }
+      .hero-stats { grid-template-columns: 1fr 1fr; }
+      .nav-links { display: none; }
+    }
+
+    /* ── LANG HIDDEN ── */
+    [data-lang] { display: none; }
+    .lang-en [data-lang="en"] { display: block; }
+    .lang-en [data-lang="en"].inline { display: inline; }
+    .lang-en [data-lang="en"].flex { display: flex; }
+    .lang-zh [data-lang="zh"] { display: block; }
+    .lang-zh [data-lang="zh"].inline { display: inline; }
+    .lang-zh [data-lang="zh"].flex { display: flex; }
+  </style>
+</head>
+<body class="lang-en">
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#home">
+    <img src="logo_original.png" alt="CEMI — Consistent Electronic Materials, Inc." />
+  </a>
+  <div class="nav-right">
+    <ul class="nav-links">
+      <li><a href="#about"><span data-lang="en" class="inline">About</span><span data-lang="zh" class="inline">關於我們</span></a></li>
+      <li><a href="#products"><span data-lang="en" class="inline">Products & Services</span><span data-lang="zh" class="inline">產品與服務</span></a></li>
+      <li><a href="#equipment"><span data-lang="en" class="inline">Equipment</span><span data-lang="zh" class="inline">設備</span></a></li>
+      <li><a href="#contact"><span data-lang="en" class="inline">Contact</span><span data-lang="zh" class="inline">聯絡我們</span></a></li>
+    </ul>
+    <div class="lang-switcher">
+      <button class="lang-btn active" id="btn-en" onclick="setLang('en')">
+        <span class="flag">🇺🇸</span> EN
+      </button>
+      <button class="lang-btn" id="btn-zh" onclick="setLang('zh')">
+        <span class="flag">🇹🇼</span> 中文
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="home">
+  <div class="hero-grid">
+    <div>
+      <img src="logo_original.png" alt="CEMI" style="height:48px;width:auto;margin-bottom:28px;background:#fff;border-radius:6px;padding:6px 14px;display:block;" />
+      <div class="hero-tag">
+        <span data-lang="en" class="inline">Semiconductor Materials Manufacturer</span>
+        <span data-lang="zh" class="inline">半導體材料製造商</span>
+      </div>
+      <h1 data-lang="en">Advanced Materials for<br><em>Semiconductor Fabrication</em></h1>
+      <h1 data-lang="zh">半導體製程<br><em>先進材料解決方案</em></h1>
+      <p class="hero-sub" data-lang="en">
+        CEMI specializes in the development and toll-manufacturing of high-purity photoresist, strippers, wafer cleaners, and protective coatings — engineered for the precision demands of modern semiconductor and display production.
+      </p>
+      <p class="hero-sub" data-lang="zh">
+        恆煦電子材料（CEMI）專注於高純度光阻、剝離液、晶圓清洗液及保護塗料的研發與委託代工，為現代半導體與顯示器製造提供嚴苛製程所需的精密材料。
+      </p>
+      <div class="btn-row">
+        <a href="#products" class="btn btn-primary">
+          <span data-lang="en" class="inline">View Products</span>
+          <span data-lang="zh" class="inline">查看產品</span>
+        </a>
+        <a href="#contact" class="btn btn-outline">
+          <span data-lang="en" class="inline">Contact Us</span>
+          <span data-lang="zh" class="inline">聯絡我們</span>
+        </a>
+      </div>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-card">
+        <div class="stat-number">100<span>t</span></div>
+        <div class="stat-label" data-lang="en">Photoresist Capacity / Month</div>
+        <div class="stat-label" data-lang="zh">光阻月產能</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">360<span>t</span></div>
+        <div class="stat-label" data-lang="en">Auxiliary Chemicals / Month</div>
+        <div class="stat-label" data-lang="zh">輔助化學品月產能</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">70<span>+</span></div>
+        <div class="stat-label" data-lang="en">Patents (TW · CN · US · PCT)</div>
+        <div class="stat-label" data-lang="zh">專利數（台灣·中國·美國·PCT）</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">600<span>m²</span></div>
+        <div class="stat-label" data-lang="en">ISO Class 6 Clean Room</div>
+        <div class="stat-label" data-lang="zh">ISO Class 6 無塵室</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-inner">
+    <div class="section-tag">
+      <span data-lang="en" class="inline">About CEMI</span>
+      <span data-lang="zh" class="inline">關於恆煦</span>
+    </div>
+    <h2 data-lang="en">Built on Expertise,<br>Driven by Innovation</h2>
+    <h2 data-lang="zh">深厚技術底蘊，<br>創新驅動未來</h2>
+    <div class="about-grid">
+      <div class="about-text">
+        <p data-lang="en">Consistent Electronic Materials, Inc. (CEMI / 恆煦電子材料股份有限公司) is a Taiwan-based semiconductor material manufacturer with deep expertise in photoresist chemistry and process-critical specialty chemicals.</p>
+        <p data-lang="zh">恆煦電子材料股份有限公司（CEMI）是一家專注於光阻化學與製程關鍵特用化學品的台灣半導體材料製造商，擁有深厚的技術積累。</p>
+        <p data-lang="en">We explore emerging applications across IC front-end fabrication and advanced packaging, delivering products that exceed industry expectations. Our global patent portfolio of over 70 granted patents — covering Taiwan, China, the USA, and PCT — reflects our commitment to continuous innovation.</p>
+        <p data-lang="zh">我們積極探索IC前段製程與先進封裝等新興應用領域，持續提供超越業界期望的產品。涵蓋台灣、中國、美國及PCT的逾70項已授專利，展現了我們對持續創新的堅定承諾。</p>
+        <p data-lang="en">With a 3,000 m² facility and a 600 m² Class 1,000 (ISO Class 6) clean room in Toufen, Miaoli, Taiwan, CEMI operates at the quality and precision standards demanded by leading semiconductor manufacturers.</p>
+        <p data-lang="zh">坐落於台灣苗栗縣頭份市，CEMI擁有3,000平方公尺廠房及600平方公尺Class 1,000（ISO Class 6）無塵室，以半導體龍頭廠商所要求的品質與精密標準全力運營。</p>
+
+        <div class="founders">
+          <div class="founder-card">
+            <div class="founder-avatar">RH</div>
+            <div class="founder-name">Robert Hsu</div>
+            <div class="founder-name-zh">許銘案</div>
+            <div class="founder-role">
+              <span data-lang="en" class="inline">Founder</span>
+              <span data-lang="zh" class="inline">創辦人</span>
+            </div>
+          </div>
+          <div class="founder-card">
+            <div class="founder-avatar">AK</div>
+            <div class="founder-name">井川 昭彥</div>
+            <div class="founder-name-zh">Akihiko Ikawa</div>
+            <div class="founder-role">
+              <span data-lang="en" class="inline">Co-founder</span>
+              <span data-lang="zh" class="inline">共同創辦人</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="specs-grid">
+          <div class="spec-card">
+            <div class="spec-value">3,000 <span class="spec-unit">m²</span></div>
+            <div class="spec-label" data-lang="en">Total Facility Area</div>
+            <div class="spec-label" data-lang="zh">廠房總面積</div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-value">600 <span class="spec-unit">m²</span></div>
+            <div class="spec-label" data-lang="en">Clean Room (ISO Class 6)</div>
+            <div class="spec-label" data-lang="zh">無塵室（ISO Class 6）</div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-value">100 <span class="spec-unit">t/mo</span></div>
+            <div class="spec-label" data-lang="en">Photoresist Production</div>
+            <div class="spec-label" data-lang="zh">光阻月產能</div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-value">360 <span class="spec-unit">t/mo</span></div>
+            <div class="spec-label" data-lang="en">Auxiliary Chemicals</div>
+            <div class="spec-label" data-lang="zh">輔助化學品月產能</div>
+          </div>
+        </div>
+
+        <div style="margin-top:20px;">
+          <div class="section-tag" style="margin-bottom:10px;">
+            <span data-lang="en" class="inline">Certifications</span>
+            <span data-lang="zh" class="inline">認證</span>
+          </div>
+          <div class="cert-row">
+            <div class="cert-badge">
+              <div class="cert-name">EN ISO 9001:2015</div>
+              <div class="cert-desc" data-lang="en">Quality Management System — systematic process control for consistent product quality</div>
+              <div class="cert-desc" data-lang="zh">品質管理系統 — 系統化製程管控，確保產品品質一致性</div>
+            </div>
+            <div class="cert-badge">
+              <div class="cert-name">EN ISO 14001:2015</div>
+              <div class="cert-desc" data-lang="en">Environmental Management System — commitment to sustainable and responsible manufacturing</div>
+              <div class="cert-desc" data-lang="zh">環境管理系統 — 致力於永續與負責任的製造實踐</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCTS -->
+<section id="products">
+  <div class="section-inner">
+    <div class="section-tag">
+      <span data-lang="en" class="inline">Products & Services</span>
+      <span data-lang="zh" class="inline">產品與服務</span>
+    </div>
+    <h2 data-lang="en">Specialty Chemicals for<br>Semiconductor Fabrication</h2>
+    <h2 data-lang="zh">半導體製程<br>關鍵特用化學品</h2>
+    <p class="section-lead" data-lang="en">Our product line covers every critical chemistry step in photolithography and wafer surface preparation, formulated for tight process windows and high-yield manufacturing.</p>
+    <p class="section-lead" data-lang="zh">我們的產品線涵蓋光刻與晶圓表面處理的每一個關鍵化學步驟，針對嚴苛製程窗口與高良率製造精心配製。</p>
+
+    <div class="products-grid">
+      <div class="product-card">
+        <div class="product-icon">🔴</div>
+        <div class="product-type"><span data-lang="en" class="inline">Photoresist</span><span data-lang="zh" class="inline">光阻</span></div>
+        <div class="product-name" data-lang="en">Positive Photoresist</div>
+        <div class="product-name" data-lang="zh">正型光阻</div>
+        <div class="product-desc" data-lang="en">High-resolution positive-tone photoresist for IC front-end patterning, display panel, and LED applications. Designed for consistent film uniformity and process latitude.</div>
+        <div class="product-desc" data-lang="zh">高解析度正型光阻，適用於IC前段圖形化、顯示面板及LED製程，具備優異的薄膜均勻性與製程容忍度。</div>
+      </div>
+      <div class="product-card">
+        <div class="product-icon">🔵</div>
+        <div class="product-type"><span data-lang="en" class="inline">Photoresist</span><span data-lang="zh" class="inline">光阻</span></div>
+        <div class="product-name" data-lang="en">Negative Photoresist</div>
+        <div class="product-name" data-lang="zh">負型光阻</div>
+        <div class="product-desc" data-lang="en">Negative-tone photoresist requiring high chemical resistance and robust pattern integrity, suitable for specialized patterning in semiconductor and compound semiconductor fabrication.</div>
+        <div class="product-desc" data-lang="zh">負型光阻具備高化學耐性與穩健的圖形完整性，適用於半導體及化合物半導體製程中的特殊圖形化應用。</div>
+      </div>
+      <div class="product-card">
+        <div class="product-icon">⚗️</div>
+        <div class="product-type"><span data-lang="en" class="inline">Process Chemical</span><span data-lang="zh" class="inline">製程化學品</span></div>
+        <div class="product-name" data-lang="en">Photoresist Stripper</div>
+        <div class="product-name" data-lang="zh">光阻剝離液</div>
+        <div class="product-desc" data-lang="en">Effective stripping formulations for complete photoresist removal post-etch or post-implant, with minimal substrate damage and compatibility with advanced device structures.</div>
+        <div class="product-desc" data-lang="zh">高效剝離配方，可在蝕刻或離子佈植後完整去除光阻，對基板損傷極低，兼容先進元件結構。</div>
+      </div>
+      <div class="product-card">
+        <div class="product-icon">💧</div>
+        <div class="product-type"><span data-lang="en" class="inline">Surface Preparation</span><span data-lang="zh" class="inline">表面處理</span></div>
+        <div class="product-name" data-lang="en">Wafer Cleaner</div>
+        <div class="product-name" data-lang="zh">晶圓清洗液</div>
+        <div class="product-desc" data-lang="en">High-purity cleaning chemistries for wafer surface preparation — removing organic residues, metallic contaminants, and particles to meet stringent semiconductor cleanliness standards.</div>
+        <div class="product-desc" data-lang="zh">高純度晶圓表面處理清洗液，有效去除有機殘留、金屬污染物及微粒，符合嚴格的半導體潔淨標準。</div>
+      </div>
+      <div class="product-card">
+        <div class="product-icon">🛡️</div>
+        <div class="product-type"><span data-lang="en" class="inline">Protective Coating</span><span data-lang="zh" class="inline">保護塗料</span></div>
+        <div class="product-name" data-lang="en">Semiconductor Protective Coating</div>
+        <div class="product-name" data-lang="zh">半導體保護塗料</div>
+        <div class="product-desc" data-lang="en">Specialty protective coatings for semiconductor and display applications, providing mechanical protection, chemical resistance, and surface passivation during processing and handling.</div>
+        <div class="product-desc" data-lang="zh">適用於半導體與顯示器的特種保護塗料，在製程與搬運過程中提供機械保護、耐化學性及表面鈍化功能。</div>
+      </div>
+      <div class="product-card" style="background:var(--light);">
+        <div class="product-icon">🔬</div>
+        <div class="product-type"><span data-lang="en" class="inline">Custom</span><span data-lang="zh" class="inline">客製化</span></div>
+        <div class="product-name" data-lang="en">Custom Formulation R&D</div>
+        <div class="product-name" data-lang="zh">客製化配方研發</div>
+        <div class="product-desc" data-lang="en">Collaborative R&D to develop application-specific chemistries. From exploratory research to pilot-scale validation, our team works alongside customers to solve unique process challenges.</div>
+        <div class="product-desc" data-lang="zh">與客戶協同研發應用專屬化學品，從探索性研究到中試驗證，我們的團隊攜手客戶解決獨特的製程挑戰。</div>
+      </div>
+    </div>
+
+    <div class="services-row">
+      <div class="service-card">
+        <h3>⚙️ <span data-lang="en" class="inline">Toll Manufacturing</span><span data-lang="zh" class="inline">委託代工（Toll Manufacturing）</span></h3>
+        <p data-lang="en">Our primary business model — customers supply formulation specifications; CEMI provides precision manufacturing in our ISO-certified, cleanroom-equipped facility. Scalable up to 100 t/month for photoresist and 360 t/month for auxiliary chemicals.</p>
+        <p data-lang="zh">我們的核心業務模式——客戶提供配方規格，CEMI在ISO認證、無塵室設備齊全的廠房內進行精密製造。光阻產能可達每月100噸，輔助化學品每月360噸，可依需求彈性擴充。</p>
+      </div>
+      <div class="service-card">
+        <h3>🔬 <span data-lang="en" class="inline">Research & Development</span><span data-lang="zh" class="inline">研究與開發</span></h3>
+        <p data-lang="en">CEMI's in-house R&D team drives innovation backed by 70+ patents across Taiwan, China, the USA, and PCT. We support customers in next-generation materials for IC front-end, advanced packaging, display, LED, and compound semiconductor applications.</p>
+        <p data-lang="zh">CEMI內部研發團隊以逾70項橫跨台灣、中國、美國及PCT的專利為後盾，持續驅動創新，支援客戶開發IC前段、先進封裝、顯示器、LED及化合物半導體的次世代材料。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EQUIPMENT -->
+<section id="equipment">
+  <div class="section-inner">
+    <div class="section-tag">
+      <span data-lang="en" class="inline">Capabilities</span>
+      <span data-lang="zh" class="inline">設備能力</span>
+    </div>
+    <h2 data-lang="en">Testing & Process Equipment</h2>
+    <h2 data-lang="zh">檢驗與製程設備</h2>
+    <p class="section-lead" data-lang="en">Our facility is equipped with industry-standard analytical and process tools to ensure material quality, support R&D, and validate customer processes end-to-end.</p>
+    <p class="section-lead" data-lang="zh">廠內配備業界標準的分析與製程設備，確保材料品質、支援研發，並對客戶製程進行端對端驗證。</p>
+
+    <div class="equip-tabs">
+      <div class="equip-tab active" id="tab-testing" onclick="switchTab('testing', this)">
+        <span data-lang="en" class="inline">Analytical & Testing</span>
+        <span data-lang="zh" class="inline">分析與檢驗</span>
+      </div>
+      <div class="equip-tab" id="tab-process" onclick="switchTab('process', this)">
+        <span data-lang="en" class="inline">Process & Lithography</span>
+        <span data-lang="zh" class="inline">製程與微影</span>
+      </div>
+    </div>
+
+    <div id="testing" class="equip-panel active">
+      <div class="equip-item"><div class="equip-num">1</div><div><div class="equip-name">ICP-MS</div><div class="equip-zh">感應耦合電漿質譜儀 — <span data-lang="en" class="inline">Trace elemental & isotopic analysis</span><span data-lang="zh" class="inline">微量元素與同位素分析</span></div></div></div>
+      <div class="equip-item"><div class="equip-num">2</div><div><div class="equip-name">UV-Vis Spectrophotometer</div><div class="equip-zh">紫外可見光吸收光譜儀 — <span data-lang="en" class="inline">Concentration & optical property analysis</span><span data-lang="zh" class="inline">濃度與光學特性分析</span></div></div></div>
+      <div class="equip-item"><div class="equip-num">3</div><div><div class="equip-name">ATR FT-IR Spectrometer</div><div class="equip-zh">全反射式紅外光譜儀 — <span data-lang="en" class="inline">Molecular & chemical structure identification</span><span data-lang="zh" class="inline">分子與化學結構鑑定</span></div></div></div>
+      <div class="equip-item"><div class="equip-num">4</div><div><div class="equip-name">Goniometer</div><div class="equip-zh">動態接觸角量測儀 — <span data-lang="en" class="inline">Surface wettability characterization</span><span data-lang="zh" class="inline">表面潤濕性表徵</span></div></div></div>
+      <div class="equip-item"><div class="equip-num">5</div><div><div class="equip-name">Liquid Particle Counter</div><div class="equip-zh">液體懸浮微粒計數儀 — <span data-lang="en" class="inline">Particle counting in liquids</span><span data-lang="zh" class="inline">液體中懸浮微粒計數</span></div></div></div>
+      <div class="equip-item"><div class="equip-num">6</div><div><div class="equip-name">Kinematic Viscometer</div><div class="equip-zh">動態黏度計 — <span data-lang="en" class="inline">Dynamic viscosity measurement</span><span data-lang="zh" class="inline">動態黏度量測</span></div></div></div>
+      <div class="equip-item"><div class="equip-num">7</div><div><div class="equip-name">Vibronic Viscometer</div><div class="equip-zh">音波式黏度計 — <span data-lang="en" class="inline">Acoustic wave viscosity measurement</span><span data-lang="zh" class="inline">聲波黏度量測</span></div></div></div>
+      <div class="equip-item"><div class="equip-num">8</div><div><div class="equip-name">Solid Content Meter</div><div class="equip-zh">固含量量測儀 — <span data-lang="en" class="inline">Solids content measurement</span><span data-lang="zh" class="inline">固含量量測</span></div></div></div>
+      <div class="equip-item"><div class="equip-num">9</div><div><div class="equip-name">Karl-Fischer Titrator</div><div class="equip-zh">KF式微量水分滴定儀 — <span data-lang="en" class="inline">Moisture content titration</span><span data-lang="zh" class="inline">微量水分滴定</span></div></div></div>
+      <div class="equip-item"><div class="equip-num">10</div><div><div class="equip-name">Acid/Base & Redox Titrator</div><div class="equip-zh">自動酸鹼氧化還原滴定儀 — <span data-lang="en" class="inline">Automated acid-base & redox titration</span><span data-lang="zh" class="inline">自動酸鹼及氧化還原滴定</span></div></div></div>
+    </div>
+
+    <div id="process" class="equip-panel">
+      <div class="equip-item"><div class="equip-num">1</div><div><div class="equip-name">Spin Coater</div><div class="equip-zh">旋轉塗布機</div></div><div class="equip-qty">×4</div></div>
+      <div class="equip-item"><div class="equip-num">2</div><div><div class="equip-name">Slit Coater</div><div class="equip-zh">精密狹縫塗佈機</div></div></div>
+      <div class="equip-item"><div class="equip-num">3</div><div><div class="equip-name">Spray Coater</div><div class="equip-zh">精密光阻噴塗機</div></div></div>
+      <div class="equip-item"><div class="equip-num">4</div><div><div class="equip-name">Mask Aligner</div><div class="equip-zh">精密對位曝光機</div></div><div class="equip-qty">×3</div></div>
+      <div class="equip-item"><div class="equip-num">5</div><div><div class="equip-name">E-Gun Film Deposition</div><div class="equip-zh">電子束真空鍍膜機</div></div></div>
+      <div class="equip-item"><div class="equip-num">6</div><div><div class="equip-name">Nikon i-line Stepper</div><div class="equip-zh">i-line 步進式精密曝光機</div></div></div>
+      <div class="equip-item"><div class="equip-num">7</div><div><div class="equip-name">Laser Direct Imaging (LDI)</div><div class="equip-zh">雷射直寫曝光機</div></div></div>
+      <div class="equip-item"><div class="equip-num">8</div><div><div class="equip-name">Conveyor Wet Etching Line</div><div class="equip-zh">自動濕式蝕刻機</div></div></div>
+      <div class="equip-item"><div class="equip-num">9</div><div><div class="equip-name">Conveyor Developing Line</div><div class="equip-zh">自動顯影機</div></div></div>
+      <div class="equip-item"><div class="equip-num">10</div><div><div class="equip-name">Filmetrics</div><div class="equip-zh">光學膜厚量測儀</div></div></div>
+      <div class="equip-item"><div class="equip-num">11</div><div><div class="equip-name">Optical Microscope</div><div class="equip-zh">光學顯微鏡</div></div></div>
+      <div class="equip-item"><div class="equip-num">12</div><div><div class="equip-name">Laser Confocal Microscope</div><div class="equip-zh">雷射共聚焦顯微鏡</div></div></div>
+      <div class="equip-item"><div class="equip-num">13</div><div><div class="equip-name">Scanning Electron Microscope (SEM)</div><div class="equip-zh">掃描式電子顯微鏡</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-inner">
+    <div class="section-tag">
+      <span data-lang="en" class="inline">Get in Touch</span>
+      <span data-lang="zh" class="inline">聯絡我們</span>
+    </div>
+    <h2 data-lang="en">Contact Us</h2>
+    <h2 data-lang="zh">聯絡我們</h2>
+    <p class="section-lead" style="color:#8ba5c4;" data-lang="en">Interested in toll manufacturing, product inquiries, or R&D collaboration? Reach out to our team.</p>
+    <p class="section-lead" style="color:#8ba5c4;" data-lang="zh">對委託代工、產品詢問或研發合作有興趣？歡迎與我們的團隊聯絡。</p>
+    <div class="contact-grid">
+      <div class="contact-info">
+        <div class="contact-item">
+          <div class="contact-item-icon">📍</div>
+          <div>
+            <div class="contact-item-label"><span data-lang="en" class="inline">Address</span><span data-lang="zh" class="inline">地址</span></div>
+            <div class="contact-item-value" data-lang="en">No. 442-1, Zhonghua Road,<br>Toufen City, Miaoli County 351, Taiwan</div>
+            <div class="contact-item-value" data-lang="zh">351 苗栗縣頭份市中華路 442-1 號</div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon">📞</div>
+          <div>
+            <div class="contact-item-label"><span data-lang="en" class="inline">Phone</span><span data-lang="zh" class="inline">電話</span></div>
+            <div class="contact-item-value"><a href="tel:+88637623148">+886-3-762-3148</a></div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon">🖨️</div>
+          <div>
+            <div class="contact-item-label">Fax</div>
+            <div class="contact-item-value">+886-3-762-3147</div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon">✉️</div>
+          <div>
+            <div class="contact-item-label">Email</div>
+            <div class="contact-item-value"><a href="mailto:robert@consistent-em.com">robert@consistent-em.com</a></div>
+          </div>
+        </div>
+      </div>
+      <div class="map-box">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3636.8!2d120.8978!3d24.6783!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjTCsDQwJzQyLjAiTiAxMjDCsDUzJzUyLjAiRQ!5e0!3m2!1sen!2stw!4v1680000000000" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        <div class="map-label">恆煦電子材料股份有限公司 · 351苗栗縣頭份市中華路442-1號</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-left">
+    <strong>Consistent Electronic Materials, Inc.</strong> — 恆煦電子材料股份有限公司
+  </div>
+  <div class="footer-right">© 2023 CEMI. All rights reserved.</div>
+</footer>
+
+<script>
+  function setLang(lang) {
+    document.body.className = 'lang-' + lang;
+    document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+    document.getElementById('btn-zh').classList.toggle('active', lang === 'zh');
+  }
+
+  function switchTab(id, el) {
+    document.querySelectorAll('.equip-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.equip-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    el.classList.add('active');
+  }
+</script>
+</body>
+</html>
