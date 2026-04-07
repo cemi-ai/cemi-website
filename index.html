@@ -172,10 +172,50 @@
       footer { flex-direction: column; gap: 8px; text-align: center; }
     }
     @media (max-width: 600px) {
-      .products-grid { grid-template-columns: 1fr; }
-      .specs-grid { grid-template-columns: 1fr 1fr; }
-      .hero-stats { grid-template-columns: 1fr 1fr; }
+      /* Nav */
+      nav { padding: 0 4vw; height: 60px; }
+      .nav-logo img { height: 36px; }
       .nav-links { display: none; }
+      .nav-right { gap: 10px; }
+      .lang-btn { padding: 4px 8px; font-size: 11px; }
+      .lang-btn .flag { font-size: 14px; }
+
+      /* Hero */
+      #home { padding: 90px 4vw 60px; min-height: auto; }
+      .hero-grid { grid-template-columns: 1fr; gap: 32px; }
+      .hero-sub { font-size: 15px; }
+      .hero-stats { grid-template-columns: 1fr 1fr; gap: 10px; }
+      .stat-card { padding: 16px 12px; }
+      .stat-number { font-size: 28px; }
+      .btn { padding: 11px 20px; font-size: 13px; }
+
+      /* Sections */
+      section { padding: 60px 4vw; }
+      .section-lead { font-size: 15px; margin-bottom: 32px; }
+      h2 { font-size: 24px; }
+
+      /* About */
+      .about-grid { grid-template-columns: 1fr; gap: 32px; }
+      .founders { flex-direction: column; }
+      .specs-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+      .cert-row { flex-direction: column; }
+
+      /* Products */
+      .products-grid { grid-template-columns: 1fr; }
+      .services-row { grid-template-columns: 1fr; }
+
+      /* Equipment */
+      .equip-panel.active { grid-template-columns: 1fr; }
+      .equip-tabs { flex-wrap: wrap; }
+      .equip-tab { font-size: 13px; padding: 8px 14px; }
+
+      /* Contact */
+      .contact-grid { grid-template-columns: 1fr; gap: 32px; }
+      .map-box iframe { height: 220px; }
+
+      /* Footer */
+      footer { flex-direction: column; gap: 8px; text-align: center; padding: 20px 4vw; }
+      .footer-left { font-size: 12px; }
     }
 
     /* ── LANG HIDDEN ── */
