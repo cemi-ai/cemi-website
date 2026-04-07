@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 80" width="560" height="80">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 80" width="520" height="80">
   <defs>
     <filter id="glow">
       <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
@@ -13,43 +13,44 @@
     </linearGradient>
   </defs>
 
-  <!-- Hexagon (pointy-top, center 40,40, circumradius 34) -->
+  <!-- Hexagon (flat-top) -->
   <polygon
-    points="40,6 69,23 69,57 40,74 11,57 11,23"
+    points="74,40 57,11 23,11 6,40 23,69 57,69"
     fill="url(#hexGrad)"
     filter="url(#glow)"
     stroke="#00BFFF"
     stroke-width="1"
   />
 
-  <!-- Letter C — large but fits inside hexagon -->
+  <!-- Letter C — 48px, precisely centered in hexagon -->
   <text
     x="40" y="40"
     font-family="Arial, sans-serif"
-    font-size="38"
+    font-size="48"
     font-weight="800"
     fill="white"
     text-anchor="middle"
-    dominant-baseline="middle"
+    dominant-baseline="central"
   >C</text>
 
-  <!-- Chinese name — letter-spacing to match English width, no glyph distortion -->
+  <!-- Chinese name — modest letter-spacing, font-size 20 -->
   <text
     x="90" y="28"
     font-family="'PingFang TC', 'Microsoft JhengHei', Arial, sans-serif"
-    font-size="18"
+    font-size="20"
     font-weight="700"
     fill="white"
-    letter-spacing="10.5"
+    letter-spacing="3"
   >恆煦電子材料股份有限公司</text>
 
-  <!-- English name — natural spacing -->
+  <!-- English name — scaled to match Chinese width, letter-spacing unchanged -->
   <text
-    x="90" y="56"
+    x="90" y="57"
     font-family="Arial, 'Segoe UI', sans-serif"
     font-size="15"
     font-weight="400"
     fill="#8ba5c4"
-    letter-spacing="0.3"
+    textLength="282"
+    lengthAdjust="spacingAndGlyphs"
   >Consistent Electronic Materials, Inc.</text>
 </svg>
