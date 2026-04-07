@@ -21,8 +21,8 @@
       display: flex; align-items: center; justify-content: space-between;
       padding: 0 6vw; height: 72px;
     }
-    .nav-logo { display: flex; align-items: center; text-decoration: none; max-width: 60vw; }
-    .nav-logo img { height: 52px; width: auto; max-width: 100%; }
+    .nav-logo { display: flex; align-items: center; text-decoration: none; }
+    .nav-logo img { height: 44px; width: auto; max-width: 55vw; }
     .nav-right { display: flex; align-items: center; gap: 32px; }
     .nav-links { display: flex; gap: 28px; list-style: none; }
     .nav-links a { color: #a8bedc; text-decoration: none; font-size: 14px; font-weight: 500; transition: color .2s; }
@@ -174,7 +174,7 @@
     @media (max-width: 600px) {
       /* Nav */
       nav { padding: 0 4vw; height: 60px; }
-      .nav-logo img { height: 36px; }
+      .nav-logo img { height: auto; max-width: 48vw; }
       .nav-links { display: none; }
       .nav-right { gap: 10px; }
       .lang-btn { padding: 4px 8px; font-size: 11px; }
@@ -258,7 +258,7 @@
 <section id="home">
   <div class="hero-grid">
     <div>
-      <img src="logo.svg" alt="CEMI" style="height:90px;width:auto;max-width:100%;margin-bottom:28px;display:block;" />
+      <img src="logo.svg" alt="CEMI" style="height:auto;width:100%;max-width:480px;margin-bottom:28px;display:block;" />
       <div class="hero-tag">
         <span data-lang="en" class="inline">Semiconductor Materials Manufacturer</span>
         <span data-lang="zh" class="inline">半導體材料製造商</span>
