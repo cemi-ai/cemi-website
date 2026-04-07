@@ -11,8 +11,8 @@
       --light: #f4f7fb; --white: #ffffff; --gray: #6b7a90;
       --border: #dde3ed; --text: #1c2b3a;
     }
-    html { scroll-behavior: smooth; }
-    body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; color: var(--text); background: var(--white); line-height: 1.7; }
+    html { scroll-behavior: smooth; overflow-x: hidden; }
+    body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; color: var(--text); background: var(--white); line-height: 1.7; overflow-x: hidden; }
 
     /* ── NAV ── */
     nav {
@@ -21,8 +21,8 @@
       display: flex; align-items: center; justify-content: space-between;
       padding: 0 6vw; height: 72px;
     }
-    .nav-logo { display: flex; align-items: center; text-decoration: none; }
-    .nav-logo img { height: 52px; width: auto; }
+    .nav-logo { display: flex; align-items: center; text-decoration: none; max-width: 60vw; }
+    .nav-logo img { height: 52px; width: auto; max-width: 100%; }
     .nav-right { display: flex; align-items: center; gap: 32px; }
     .nav-links { display: flex; gap: 28px; list-style: none; }
     .nav-links a { color: #a8bedc; text-decoration: none; font-size: 14px; font-weight: 500; transition: color .2s; }
@@ -181,13 +181,14 @@
       .lang-btn .flag { font-size: 14px; }
 
       /* Hero */
-      #home { padding: 90px 4vw 60px; min-height: auto; }
+      #home { padding: 90px 4vw 60px; min-height: auto; overflow: hidden; }
       .hero-grid { grid-template-columns: 1fr; gap: 32px; }
-      .hero-sub { font-size: 15px; }
+      .hero-sub { font-size: 15px; max-width: 100%; }
       .hero-stats { grid-template-columns: 1fr 1fr; gap: 10px; }
       .stat-card { padding: 16px 12px; }
       .stat-number { font-size: 28px; }
       .btn { padding: 11px 20px; font-size: 13px; }
+      #home img { height: 60px; }
 
       /* Sections */
       section { padding: 60px 4vw; }
@@ -257,7 +258,7 @@
 <section id="home">
   <div class="hero-grid">
     <div>
-      <img src="logo.svg" alt="CEMI" style="height:90px;width:auto;margin-bottom:28px;display:block;" />
+      <img src="logo.svg" alt="CEMI" style="height:90px;width:auto;max-width:100%;margin-bottom:28px;display:block;" />
       <div class="hero-tag">
         <span data-lang="en" class="inline">Semiconductor Materials Manufacturer</span>
         <span data-lang="zh" class="inline">半導體材料製造商</span>
