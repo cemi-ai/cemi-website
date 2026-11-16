@@ -79,13 +79,23 @@
       display: flex; align-items: center; justify-content: space-between;
       padding: 0 6vw; height: 72px;
     }
-    .nav-logo { display: flex; align-items: center; text-decoration: none; }
+    /* min-width: 0 lets the logo shrink past its own content width, which
+       makes it — not the controls — the thing that gives way when the bar
+       runs out of room. Pair it with flex-shrink: 0 on .nav-right below. */
+    .nav-logo { display: flex; align-items: center; text-decoration: none; min-width: 0; max-width: 55vw; }
     /* logo.svg carries a viewBox but no width/height, so it has no intrinsic
        size of its own. One axis must therefore be given a definite length —
        with both left auto the flex row shrinks the image to 0x0 and the
-       header renders empty. Here that axis is the height. */
-    .nav-logo img { height: 44px; width: auto; max-width: 55vw; }
-    .nav-right { display: flex; align-items: center; gap: 32px; }
+       header renders empty. Here that axis is the height, which is why the
+       cap lives on the link above and this is max-width: 100% of it. The SVG
+       has a viewBox, so it letterboxes inside a narrower box rather than
+       distorting. */
+    .nav-logo img { height: 44px; width: auto; max-width: 100%; }
+    /* The controls keep their size at every width. Without this the flex
+       algorithm shrinks .nav-right too, and because its own children do not
+       shrink they simply spill out of it — which is how the menu button ended
+       up 13.6px into the nav's right padding at 320. */
+    .nav-right { display: flex; align-items: center; gap: 32px; flex-shrink: 0; }
     .nav-links { display: flex; gap: 28px; list-style: none; }
     .nav-links a { color: #a8bedc; text-decoration: none; font-size: 14px; font-weight: 500; transition: color .2s; }
     .nav-links a:hover { color: var(--white); }
@@ -308,9 +318,11 @@
       /* Nav */
       nav { padding: 0 4vw; height: 60px; }
       /* A definite height (not `height: auto`) — see the note on .nav-logo img.
-         28px keeps the logo, the language buttons and the hamburger on one
-         row down to 320px. */
-      .nav-logo img { height: 28px; max-width: 40vw; }
+         40vw is the logo's preferred width; below about 346px the bar cannot
+         fit that plus the controls, so the link shrinks below it and the logo
+         follows, keeping the menu button inside the nav's padding. */
+      .nav-logo { max-width: 40vw; }
+      .nav-logo img { height: 28px; }
       .nav-links { padding: 4px 4vw 12px; }
       .nav-right { gap: 10px; }
       .lang-btn { padding: 4px 8px; font-size: 11px; }
