@@ -229,9 +229,11 @@
     /* ── EQUIPMENT ── */
     #equipment { background: var(--light); }
     .equip-tabs { display: flex; gap: 8px; margin-bottom: 40px; }
-    /* font-family is inherited by most elements but not by <button>, which
-       these became when they were made real tabs. */
-    .equip-tab { padding: 10px 22px; border-radius: 8px; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer; border: 1px solid var(--border); background: var(--white); color: var(--gray); transition: all .2s; }
+    /* <button> does not inherit font-family OR line-height — it resets both.
+       These were <div>s before they became real tabs, so without line-height
+       they drop from the inherited 1.7 to `normal` and the tab loses ~7px,
+       which shortens the whole equipment section. */
+    .equip-tab { padding: 10px 22px; border-radius: 8px; font-family: inherit; line-height: inherit; font-size: 14px; font-weight: 600; cursor: pointer; border: 1px solid var(--border); background: var(--white); color: var(--gray); transition: all .2s; }
     .equip-tab.active { background: var(--navy); color: var(--white); border-color: var(--navy); }
     .equip-panel { display: none; }
     .equip-panel.active { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
@@ -278,7 +280,11 @@
          row and push the language buttons off the right edge, so the links
          collapse into the hamburger from 900px down rather than from 600px.
          Below 600px there used to be no menu at all. */
-      .nav-toggle { display: inline-flex; }
+      /* order, not DOM position: the button sits before the list in the
+         markup so the keyboard reaches the links straight after opening,
+         and order puts it back on the right visually. The list itself is
+         position:absolute here, so it takes no part in the flex ordering. */
+      .nav-toggle { display: inline-flex; order: 1; }
       .nav-links {
         display: none;
         position: absolute; top: 100%; left: 0; right: 0;
@@ -367,6 +373,16 @@
     <img src="logo.svg" width="520" height="80" alt="CEMI — Consistent Electronic Materials, Inc." />
   </a>
   <div class="nav-right">
+    <!-- The toggle comes BEFORE the list it controls, because that is the
+         order a keyboard Tab and a screen reader's swipe both follow: open
+         the menu, move forward, land on the first link. Putting it after the
+         list (its visual position) meant Tab went past the menu into the hero
+         and the links were four Shift+Tabs backwards. CSS `order` in the
+         <=900px block keeps it looking the same — on the right-hand end. -->
+    <button class="nav-toggle" id="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links">
+      <span class="bars" aria-hidden="true"></span>
+      <span class="sr-only" data-lang="en">Menu</span><span class="sr-only" data-lang="zh">選單</span>
+    </button>
     <ul class="nav-links" id="nav-links">
       <li><a href="#about"><span data-lang="en" class="inline">About</span><span data-lang="zh" class="inline">關於我們</span></a></li>
       <li><a href="#products"><span data-lang="en" class="inline">Products & Services</span><span data-lang="zh" class="inline">產品與服務</span></a></li>
@@ -381,10 +397,6 @@
         <span class="flag">🇹🇼</span> 中文
       </button>
     </div>
-    <button class="nav-toggle" id="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links">
-      <span class="bars" aria-hidden="true"></span>
-      <span class="sr-only" data-lang="en">Menu</span><span class="sr-only" data-lang="zh">選單</span>
-    </button>
   </div>
 </nav>
 
