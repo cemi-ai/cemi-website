@@ -388,6 +388,9 @@
   </div>
 </nav>
 
+<!-- Every landmark on the page other than the nav and the footer -->
+<main>
+
 <!-- HERO -->
 <section id="home">
   <div class="hero-grid">
@@ -706,12 +709,22 @@
         </div>
       </div>
       <div class="map-box">
-        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3636.8!2d120.8978!3d24.6783!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjTCsDQwJzQyLjAiTiAxMjDCsDUzJzUyLjAiRQ!5e0!3m2!1sen!2stw!4v1680000000000" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        <!-- The title is what a screen reader announces instead of "frame".
+             It starts in English to match <html lang="en"> and the page's
+             default, and setLang() swaps it for data-title-zh, so it follows
+             the language the same way the rest of the page does. -->
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3636.8!2d120.8978!3d24.6783!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjTCsDQwJzQyLjAiTiAxMjDCsDUzJzUyLjAiRQ!5e0!3m2!1sen!2stw!4v1680000000000"
+                title="Map — CEMI, Toufen City, Miaoli County, Taiwan"
+                data-title-en="Map — CEMI, Toufen City, Miaoli County, Taiwan"
+                data-title-zh="地圖 — 恆煦電子材料，苗栗縣頭份市"
+                allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
         <div class="map-label">恆煦電子材料股份有限公司 · 351苗栗縣頭份市中華路442-1號</div>
       </div>
     </div>
   </div>
 </section>
+
+</main>
 
 <!-- FOOTER -->
 <footer>
@@ -726,6 +739,11 @@
     document.body.className = 'lang-' + lang;
     document.getElementById('btn-en').classList.toggle('active', lang === 'en');
     document.getElementById('btn-zh').classList.toggle('active', lang === 'zh');
+    // The map's accessible name lives in an attribute, so it cannot use the
+    // data-lang spans the rest of the page switches with.
+    document.querySelectorAll('iframe[data-title-' + lang + ']').forEach(f => {
+      f.title = f.getAttribute('data-title-' + lang);
+    });
   }
 
   /* ── Mobile menu ───────────────────────────────────────────────────────
