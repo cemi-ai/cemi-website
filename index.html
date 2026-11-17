@@ -89,47 +89,66 @@
     /* min-width: 0 lets the logo shrink past its own content width, which
        makes it — not the controls — the thing that gives way when the bar
        runs out of room. Pair it with flex-shrink: 0 on .nav-right below. */
-    /* ≥1020px：頁首放全名組合。它由寬度決定大小，高度跟著比例走 ——
-       這樣視窗變窄時高度是連續下降的，不必在 CSS 裡算高度。
-       · max-width 385px ＝ 44px × 8.747（母版的寬高比），所以高度上限 44px；
-       · margin-right 22px ＝ 44px 的 ½H。母版要求和旁邊的內容至少留 ½H，
-         而高度最多 44px，所以固定留 22px 一定夠（h 越小要求越鬆）；
-       · min-width: 0 讓它在空間不夠時先讓步（導覽列的控制項不縮，見 .nav-right）。
-       1020 這個斷點是實測的，不是算的：再窄一格（1019）全名只剩 36.4px，
-       剛好踩到 researcher 裁定的螢幕硬下限。 */
-    .nav-logo { display: flex; align-items: center; text-decoration: none; min-width: 0; max-width: 318.4px; margin-right: 22px; }
+    /* margin-right 22px ＝ 44px（最大高度）的 ½H。母版要求和旁邊的內容至少
+       留 ½H，而高度最多 44px，所以固定留 22px 在任何一階都夠。 */
+    .nav-logo { display: flex; align-items: center; text-decoration: none; min-width: 0; margin-right: 22px; }
 
-    /* 🔴 **上限分兩段，不是讓它連續長大。** 一開始寫成「有多少空間就用多少」
-       （max-width: 385px），結果在 1020–1099 之間，英文版的導覽連結比較寬、
-       中文版比較窄 → **同一個視窗寬度下，切成中文 logo 就變大**（1024：
-       英文 36.9px、中文 44.0px）。lead 要的是兩種語言長得一樣。
-       改成寬度上限直接釘死，空間再多也不會超過，兩種語言就一致了：
-       · 1020–1099：318.4px ＝ 36.4 × 8.747（硬下限那一階）
-       · ≥1100   ：385px   ＝ 44   × 8.747（和舊版 logo 同高）
-       1100 是實測的：英文在 1096 才放得下 44px，取整到 1100 留一點餘裕。 */
+    /* 🔴🔴 **頁首的 logo 一律由「高度」決定大小 —— 全名和標記都是。**
+       這一段和 HTML 的 `<source media="(min-width: 1020px)">` 是同一個決定的
+       兩半，而兩半有可能對不上：瀏覽器縮放、Windows 的顯示比例都會讓 CSS
+       寬度變成小數。auditor 2026-11-17 在 **1019.5px** 抓到 ——
+       `<picture>` 選了標記（1019.5 < 1020），舊寫法的 CSS 卻沒套到 `≤1019`
+       那一條，於是標記吃到全名的**寬度**規則，變成 318×301 的巨大六邊形
+       塞在 72px 的導覽列裡。
+
+       所以這裡做了兩層防護：
+       1. 下面的 query 用 `not all and (min-width: 1020px)`，和 HTML 的
+          `min-width: 1020px` **嚴格互補** —— 任何寬度（含小數）都恰好命中一邊。
+          不用 `max-width: 1019px`，那會在 1019–1020 之間留一條縫。
+       2. **就算真的對不上，也不會變形。** 兩種圖都用高度定大小，選錯圖最多
+          只差零點幾 px，不會變成巨大的六邊形。
+          （hero 的全名是流動寬度，做不到第 2 層，只能靠第 1 層的互補。）
+
+       高度的三階都是實測的，不是算的：
+       · 1020–1099：36.4px —— 1019 時全名只剩 36.4px，剛好踩到 researcher
+         裁定的螢幕硬下限，所以 1020 是第一個放得下的寬度；
+       · ≥1100   ：44px   —— 英文在 1096 才放得下 44px（＝舊 logo 的高度），
+         取整到 1100 留餘裕；
+       · 標記    ：36px   —— 72px 的導覽列裡上下各 18px（加了 display:block
+         之後實測），¼H 是 9px；也遠高於標記的最小尺寸 16px。
+       上下留白實測（加 display:block 後，圖本身到 nav 邊緣）：
+         44px → 14.0px（¼H 11）、36.4px → 17.8px（¼H 9.1）、36px → 18.0px（¼H 9）。
+
+       🔴 **用高度而不是寬度，也順便解決了「切語言 logo 會變大」。**
+       最早寫成「有多少空間就用多少」（流動寬度），結果 1024 時英文 36.9px、
+       中文 44.0px —— 中文的導覽連結比較短、剩的空間比較多。高度釘死之後，
+       兩種語言在任何寬度都一樣大。
+
+       🔴 **`display: block` 不是順手加的，少了它會偏上約 4px。**
+       `<img>` 預設是 inline，底下會留基線空隙，所以 `<picture>` 的盒子比圖本身
+       高 8.2px —— 而導覽列置中的是 picture，不是圖。researcher 2026-11-17 量到
+       圖在 ≥1100 時離上緣只剩 9.9px，低於 ¼H（11px）。hero 那邊本來就寫了
+       `display: block`，所以沒出事。
+       ⚠ 驗收要量**圖本身**到 nav 上下緣的距離，不要量 picture ——
+       這次漏掉就是因為量了容器沒量內容。 */
+    .nav-logo img { display: block; width: auto; height: 36.4px; }
     @media (min-width: 1100px) {
-      .nav-logo { max-width: 385px; }
+      .nav-logo img { height: 44px; }
     }
-    /* 母版的 SVG 有 viewBox、沒有 width／height，所以沒有自己的內建尺寸：
-       兩軸都寫 auto 的話，flex 列會把它壓成 0×0（這就是舊版手機頁首空白的
-       原因）。這裡定住的是**寬度**，高度由比例算出來，所以上面那個
-       max-width 同時也就定住了高度上限。 */
-    .nav-logo img { width: 100%; height: auto; }
-
-    /* ≤1019px：頁首改成只放標記。標記是方的（55:52），用寬度撐會變成一個
-       巨大的六邊形，所以這一段反過來由**高度**決定。
-       36px 在 72px 的導覽列裡上下各留 18px；researcher 裁定底的邊緣只要 ¼H
-       （9px），所以綽綽有餘，也遠高於標記的最小尺寸 16px。 */
-    @media (max-width: 1019px) {
-      .nav-logo { max-width: none; margin-right: 22px; }
-      .nav-logo img { width: auto; height: 36px; }
+    @media not all and (min-width: 1020px) {
+      .nav-logo img { height: 36px; }      /* 只有標記 */
     }
 
     /* hero 的標誌：全名用寬度撐滿（上限 480px → 高 54.9px）；
-       ≤346px 換成標記，改用高度定大小。 */
+       換成標記時改用高度定大小。
+       query 同樣和 HTML 的 `min-width: 347px` 嚴格互補，理由見上。 */
     #home picture img { width: 100%; max-width: 480px; height: auto; margin-bottom: 28px; display: block; }
-    @media (max-width: 346px) {
-      #home picture img { width: auto; height: 72px; max-width: none; }
+    @media not all and (min-width: 347px) {
+      /* 48px，不是 72px。72px 時標記的 ¼H 是 18px，但 320 寬的 #home 左右
+         padding 只有 4vw ＝ 12.8px —— 留白不夠；到下面標語的 33px 也小於
+         ½H（36px）。48px 讓兩邊都合格：¼H＝12（左緣 12.8 ✓）、
+         ½H＝24（到標語 33 ✓）。researcher 2026-11-17 實測的建議值。 */
+      #home picture img { width: auto; height: 48px; max-width: none; }
     }
     /* The controls keep their size at every width. Without this the flex
        algorithm shrinks .nav-right too, and because its own children do not
