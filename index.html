@@ -9,15 +9,19 @@
   <meta name="description" content="CEMI (Consistent Electronic Materials) is a Taiwan-based semiconductor material manufacturer specializing in photoresist chemistry and process-critical specialty chemicals. ISO-certified, 70+ patents, Class 1000 clean room in Miaoli, Taiwan.">
   <meta name="keywords" content="semiconductor materials Taiwan, photoresist manufacturer, specialty chemicals semiconductor, CEMI, 恆煦電子材料, IC fabrication materials, advanced packaging chemicals, photoresist chemistry Taiwan">
   <meta name="robots" content="index, follow">
-  <meta name="author" content="Consistent Electronic Materials, Inc.">
+  <meta name="author" content="Consistent Electronic Materials Inc.">
   <link rel="canonical" href="https://cemi-tw.com/">
+  <link rel="icon" href="/favicon.ico" sizes="any">
 
   <!-- Open Graph (Facebook / LinkedIn / Google preview) -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://cemi-tw.com/">
   <meta property="og:title" content="CEMI — Semiconductor Materials &amp; Specialty Chemicals | Taiwan">
   <meta property="og:description" content="Taiwan semiconductor material manufacturer. Photoresist chemistry, specialty chemicals, 70+ patents, ISO-certified Class 1000 clean room. Serving IC front-end, advanced packaging, and display industries.">
-  <meta property="og:image" content="https://cemi-tw.com/logo.png">
+  <meta property="og:image" content="https://cemi-tw.com/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="CEMI — Consistent Electronic Materials Inc.">
   <meta property="og:locale" content="en_US">
   <meta property="og:locale:alternate" content="zh_TW">
   <meta property="og:site_name" content="CEMI">
@@ -26,17 +30,20 @@
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="CEMI — Semiconductor Materials &amp; Specialty Chemicals">
   <meta name="twitter:description" content="Taiwan semiconductor material manufacturer. Photoresist, specialty chemicals, 70+ patents, ISO-certified.">
-  <meta name="twitter:image" content="https://cemi-tw.com/logo.png">
+  <!-- twitter:card 是 summary，預覽會裁成正方形 —— 用 1200x630 的話標記會被裁掉，
+       所以這裡用方形的標記圖。 -->
+  <meta name="twitter:image" content="https://cemi-tw.com/logo-mark-512.png">
+  <meta name="twitter:image:alt" content="CEMI">
 
   <!-- Structured Data (Google Knowledge Panel) -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "Organization",
-    "name": "Consistent Electronic Materials, Inc.",
+    "name": "Consistent Electronic Materials Inc.",
     "alternateName": ["CEMI", "恆煦電子材料股份有限公司"],
     "url": "https://cemi-tw.com",
-    "logo": "https://cemi-tw.com/logo.png",
+    "logo": "https://cemi-tw.com/logo-mark-512.png",
     "description": "Taiwan-based semiconductor material manufacturer specializing in photoresist chemistry, specialty chemicals, and process-critical materials for IC fabrication and advanced packaging.",
     "foundingLocation": "Taiwan",
     "address": {
@@ -82,15 +89,48 @@
     /* min-width: 0 lets the logo shrink past its own content width, which
        makes it — not the controls — the thing that gives way when the bar
        runs out of room. Pair it with flex-shrink: 0 on .nav-right below. */
-    .nav-logo { display: flex; align-items: center; text-decoration: none; min-width: 0; max-width: 55vw; }
-    /* logo.svg carries a viewBox but no width/height, so it has no intrinsic
-       size of its own. One axis must therefore be given a definite length —
-       with both left auto the flex row shrinks the image to 0x0 and the
-       header renders empty. Here that axis is the height, which is why the
-       cap lives on the link above and this is max-width: 100% of it. The SVG
-       has a viewBox, so it letterboxes inside a narrower box rather than
-       distorting. */
-    .nav-logo img { height: 44px; width: auto; max-width: 100%; }
+    /* ≥1020px：頁首放全名組合。它由寬度決定大小，高度跟著比例走 ——
+       這樣視窗變窄時高度是連續下降的，不必在 CSS 裡算高度。
+       · max-width 385px ＝ 44px × 8.747（母版的寬高比），所以高度上限 44px；
+       · margin-right 22px ＝ 44px 的 ½H。母版要求和旁邊的內容至少留 ½H，
+         而高度最多 44px，所以固定留 22px 一定夠（h 越小要求越鬆）；
+       · min-width: 0 讓它在空間不夠時先讓步（導覽列的控制項不縮，見 .nav-right）。
+       1020 這個斷點是實測的，不是算的：再窄一格（1019）全名只剩 36.4px，
+       剛好踩到 researcher 裁定的螢幕硬下限。 */
+    .nav-logo { display: flex; align-items: center; text-decoration: none; min-width: 0; max-width: 318.4px; margin-right: 22px; }
+
+    /* 🔴 **上限分兩段，不是讓它連續長大。** 一開始寫成「有多少空間就用多少」
+       （max-width: 385px），結果在 1020–1099 之間，英文版的導覽連結比較寬、
+       中文版比較窄 → **同一個視窗寬度下，切成中文 logo 就變大**（1024：
+       英文 36.9px、中文 44.0px）。lead 要的是兩種語言長得一樣。
+       改成寬度上限直接釘死，空間再多也不會超過，兩種語言就一致了：
+       · 1020–1099：318.4px ＝ 36.4 × 8.747（硬下限那一階）
+       · ≥1100   ：385px   ＝ 44   × 8.747（和舊版 logo 同高）
+       1100 是實測的：英文在 1096 才放得下 44px，取整到 1100 留一點餘裕。 */
+    @media (min-width: 1100px) {
+      .nav-logo { max-width: 385px; }
+    }
+    /* 母版的 SVG 有 viewBox、沒有 width／height，所以沒有自己的內建尺寸：
+       兩軸都寫 auto 的話，flex 列會把它壓成 0×0（這就是舊版手機頁首空白的
+       原因）。這裡定住的是**寬度**，高度由比例算出來，所以上面那個
+       max-width 同時也就定住了高度上限。 */
+    .nav-logo img { width: 100%; height: auto; }
+
+    /* ≤1019px：頁首改成只放標記。標記是方的（55:52），用寬度撐會變成一個
+       巨大的六邊形，所以這一段反過來由**高度**決定。
+       36px 在 72px 的導覽列裡上下各留 18px；researcher 裁定底的邊緣只要 ¼H
+       （9px），所以綽綽有餘，也遠高於標記的最小尺寸 16px。 */
+    @media (max-width: 1019px) {
+      .nav-logo { max-width: none; margin-right: 22px; }
+      .nav-logo img { width: auto; height: 36px; }
+    }
+
+    /* hero 的標誌：全名用寬度撐滿（上限 480px → 高 54.9px）；
+       ≤346px 換成標記，改用高度定大小。 */
+    #home picture img { width: 100%; max-width: 480px; height: auto; margin-bottom: 28px; display: block; }
+    @media (max-width: 346px) {
+      #home picture img { width: auto; height: 72px; max-width: none; }
+    }
     /* The controls keep their size at every width. Without this the flex
        algorithm shrinks .nav-right too, and because its own children do not
        shrink they simply spill out of it — which is how the menu button ended
@@ -317,11 +357,9 @@
     @media (max-width: 600px) {
       /* Nav */
       nav { padding: 0 4vw; height: 60px; }
-      /* A definite height (not `height: auto`) — see the note on .nav-logo img.
-         40vw is the logo's preferred width; below about 346px the bar cannot
-         fit that plus the controls, so the link shrinks below it and the logo
-         follows, keeping the menu button inside the nav's padding. */
-      .nav-logo { max-width: 40vw; }
+      /* 標記在 60px 高的導覽列裡用 28px：上下各留 16px，遠高於 ¼H（7px）。
+         寬度只有約 29.6px，和語言鈕、選單鈕一起在 320 寬也放得下。
+         （全名組合在這個寬度根本不會出現，見 ≤1019 的那一段。）*/
       .nav-logo img { height: 28px; }
       .nav-links { padding: 4px 4vw 12px; }
       .nav-right { gap: 10px; }
@@ -336,7 +374,6 @@
       .stat-card { padding: 16px 12px; }
       .stat-number { font-size: 28px; }
       .btn { padding: 11px 20px; font-size: 13px; }
-      #home img { height: 60px; }
 
       /* Sections */
       section { padding: 60px 4vw; }
@@ -382,7 +419,17 @@
 <!-- NAV -->
 <nav>
   <a class="nav-logo" href="#home">
-    <img src="logo.svg" width="520" height="80" alt="CEMI — Consistent Electronic Materials, Inc." />
+    <!-- 🔴 1020px 這個數字在兩個地方出現：這裡的 media，和 CSS 的
+         `@media (max-width: 1019px)`。兩邊是同一個決定的兩半，改一邊沒改另一邊
+         就會出現「用全名的圖、卻套到標記的尺寸」。驗收的逐寬度掃描會抓到
+         （每一個寬度都要「全名 ≥36.4px」或「標記 ≥16px」，不能都不是）。
+         1020 是實測出來的：英文版在 1019 全名只剩 36.4px，低於硬下限。
+         用 <picture> 是為了**只下載會用到的那一張** —— 全名 30KB、標記 724B，
+         手機上不該為了一張看不到的圖多付 30KB。 -->
+    <picture>
+      <source media="(min-width: 1020px)" srcset="logo-dark.svg" width="455" height="52" />
+      <img src="logo-mark.svg" width="55" height="52" alt="CEMI — Consistent Electronic Materials Inc." />
+    </picture>
   </a>
   <div class="nav-right">
     <!-- The toggle comes BEFORE the list it controls, because that is the
@@ -419,7 +466,13 @@
 <section id="home">
   <div class="hero-grid">
     <div>
-      <img src="logo.svg" width="520" height="80" alt="CEMI" style="height:auto;width:100%;max-width:480px;margin-bottom:28px;display:block;" />
+      <!-- 🔴 347px：全名在這個寬度以下會低於 36.4px 的硬下限（實測，
+           hero 的圖是 width:100% 扣掉 4vw 的左右留白）。和 CSS 的
+           `@media (max-width: 346px)` 是同一個決定的兩半，同上。 -->
+      <picture>
+        <source media="(min-width: 347px)" srcset="logo-dark.svg" width="455" height="52" />
+        <img class="hero-logo" src="logo-mark.svg" width="55" height="52" alt="CEMI" />
+      </picture>
       <div class="hero-tag">
         <span data-lang="en" class="inline">Semiconductor Materials Manufacturer</span>
         <span data-lang="zh" class="inline">半導體材料製造商</span>
@@ -479,7 +532,7 @@
     <h2 data-lang="zh">深厚技術底蘊，<br>創新驅動未來</h2>
     <div class="about-grid">
       <div class="about-text">
-        <p data-lang="en">Consistent Electronic Materials, Inc. (CEMI / 恆煦電子材料股份有限公司) is a Taiwan-based semiconductor material manufacturer with deep expertise in photoresist chemistry and process-critical specialty chemicals.</p>
+        <p data-lang="en">Consistent Electronic Materials Inc. (CEMI / 恆煦電子材料股份有限公司) is a Taiwan-based semiconductor material manufacturer with deep expertise in photoresist chemistry and process-critical specialty chemicals.</p>
         <p data-lang="zh">恆煦電子材料股份有限公司（CEMI）是一家專注於光阻化學與製程關鍵特用化學品的台灣半導體材料製造商，擁有深厚的技術積累。</p>
         <p data-lang="en">We explore emerging applications across IC front-end fabrication and advanced packaging, delivering products that exceed industry expectations. Our global patent portfolio of over 70 granted patents — covering Taiwan, China, the USA, and PCT — reflects our commitment to continuous innovation.</p>
         <p data-lang="zh">我們積極探索IC前段製程與先進封裝等新興應用領域，持續提供超越業界期望的產品。涵蓋台灣、中國、美國及PCT的逾70項已授專利，展現了我們對持續創新的堅定承諾。</p>
@@ -753,7 +806,7 @@
 <!-- FOOTER -->
 <footer>
   <div class="footer-left">
-    <strong>Consistent Electronic Materials, Inc.</strong> — 恆煦電子材料股份有限公司
+    <strong>Consistent Electronic Materials Inc.</strong> — 恆煦電子材料股份有限公司
   </div>
   <div class="footer-right">© 2023 CEMI. All rights reserved.</div>
 </footer>
