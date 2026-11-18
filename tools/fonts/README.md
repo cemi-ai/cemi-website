@@ -3,7 +3,7 @@
 **只在開發機上用，不是網站的一部分。** GitHub Pages 只服務 repo 根目錄的
 `index.html` 和它引用的檔案；這個目錄不會被任何人下載到。
 
-Nick 2026-11-17 同意把它放進 repo（規格 §11 第 1 項），條件是附這份 README。
+依實作規格 §11 第 1 項放進 repo，條件是附這份 README。
 
 ## 做什麼
 
@@ -44,7 +44,7 @@ R=https://raw.githubusercontent.com/google/fonts
 # 🔴 **用 -o 指定檔名，不要用 -LO。** `-LO` 會照 URL 存成
 #    `IBMPlexSans%5Bwdth%2Cwght%5D.ttf`（百分號編碼沒有被還原），
 #    而 subset_fonts.py 找的是 `IBMPlexSans[wdth,wght].ttf` → FileNotFoundError。
-#    （auditor 2026-11-18 實測。）
+#    （審查時實測過。）
 # 🔴 **釘 commit，不要用 main。** main 會變，哪天上游更新字型，
 #    「同一條指令」就會抓到不同的位元組，而 sha256 的表會突然對不上。
 curl -L -o 'IBMPlexSans[wdth,wght].ttf' \
@@ -78,7 +78,7 @@ shasum -a 256 *.ttf          # 和 fonts/README.md 的表對一次
 
 - **子集掉了**（來源有、輸出沒有）→ 🔴 是 bug，`exit 1`。
 - **來源本來就沒有** → ⚠ 不是 bug，是要有人決定的事實
-  （例：IBM Plex Mono 沒有 U+2003）。
+  （例：IBM Plex Mono 兩個空白 U+2002、U+2003 都沒有；Plex Sans 兩個都有）。
 
 兩者混在一起報「少 N 個字」的話，下一個人只會把那個字從清單刪掉 ——
 那會同時把真正的 bug 關掉。

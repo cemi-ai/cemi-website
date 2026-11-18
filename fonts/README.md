@@ -70,8 +70,15 @@ sha256 對得上才算同一份。
 前者是 bug，後者是要有人決定的事實。混在一起的話，下一個人只會把那個字
 從清單刪掉，順手把真正的 bug 也關掉。
 
-- **IBM Plex Mono 沒有 U+2003（EM SPACE）**，Plex Sans 有。
-  區塊小標（`.tag::before`，用 Mono）本來照規格 §3.3 在編號後面接一個
-  em space；照字面做的話每一個小標都會為了那一個空白退回系統字。
+- **IBM Plex Mono 這兩個空白都沒有：U+2002（EN SPACE）和 U+2003（EM SPACE）。**
+  Plex Sans 兩個都有，Noto Sans TC 兩個也都有（實測三個來源字型的 cmap）。
+  區塊小標（`.tag::before`，用 Mono）本來照規格在編號後面接一個 em space；
+  照字面做的話每一個小標都會為了那一個空白退回系統字。
   → 改成用 CSS 的 `margin-inline-end: 1em`。`::before` 的內容不在
   `innerText` 裡，所以和 `copy-diff` 無關。
+- ⚠ **U+2002 仍然在需求清單裡**（`.link-arrow::after` 的 `"\2002\2192"` 用得到），
+  但那個元素是 Plex **Sans**，所以腳本用 `MONO_SKIP` 把 Mono 豁免掉。
+  🔴 **那個豁免是一個沒有被驗證的假設** —— 它假設「沒有任何 Mono 的元素會用到
+  U+2002」。哪天有人在 `.tag::before` 或 `.node::before`（兩個都是 Mono）
+  放一個 en space，涵蓋檢查會**安靜地放行**。所以 `--check-only` 現在會把豁免
+  印出來，讓它至少是看得見的，不是埋在程式裡的。

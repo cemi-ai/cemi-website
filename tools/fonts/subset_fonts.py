@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """把字型子集化成這個網站真正用到的字，並且**檢查一個字都沒少**。
 
-只在開發機上跑，不是網站的一部分（Nick 2026-11-17 同意 `tools/` 進 repo）。
+只在開發機上跑，不是網站的一部分（實作規格 §11 第 1 項）。
 
 為什麼要自架字型（規格 §8）：現況整頁 18 KiB、0 個字型請求。外連的 CSS
 會擋住渲染，對方連不上時頁面要等到逾時才出現。文字已經定稿，子集做一次就好。
@@ -32,7 +32,7 @@ import unicodedata
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 
-# 🔴 **讓輸出可以重現**（auditor 2026-11-18）。
+# 🔴 **讓輸出可以重現**（程式碼審查提出）。
 #   不設的話每次重跑只有 `head.modified` 不同（實測兩次相差 11 秒），
 #   輸出的 sha256 就會變 —— 於是「重跑看看有沒有變」量不到東西。
 #
@@ -238,6 +238,13 @@ def main():
 
     print()
     print("# 🔴 涵蓋檢查（少一個字，瀏覽器會拿系統字補上，頁面不會壞但會混字形）")
+    # 🔴 **把豁免印出來。** `MONO_SKIP` 是一個**沒有被驗證的假設**：它假設沒有任何
+    #    Mono 的元素會用到那些字。`.tag::before` 和 `.node::before` 都是 Mono，
+    #    哪天有人在那裡放一個 en space，涵蓋檢查會安靜地放行。
+    #    印出來不能讓假設變成真的，但至少讓它是**看得見**的，而不是埋在程式裡。
+    if MONO_SKIP:
+        print("  ⚠ Mono 豁免（假設沒有 Mono 元素用到）：%s"
+              % " ".join("U+%04X" % ord(c) for c in sorted(MONO_SKIP)))
     lost, absent = coverage(a.src, a.out, latin, cjk)
     for name, src, chs in absent:
         print("  ⚠ %s：來源字型（%s）**本來就沒有** %d 個字 —— 不是子集的問題"
