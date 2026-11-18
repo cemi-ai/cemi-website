@@ -154,6 +154,12 @@
   .btn { display: inline-block; background: var(--ink); color: #fff; font-weight: 600; font-size: 15px; line-height: 1; padding: 15px 22px; border-radius: 2px; text-decoration: none; }
   .btn:hover { background: var(--ink-hover); }
   .link-arrow { color: var(--blue); font-weight: 600; font-size: 15px; line-height: 1; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 5px; }
+  /* 🔴 `content: "…" / ""`（替代文字語法）在 **Safari < 17.4** 和
+     **Firefox < 128** 會讓**整條宣告被丟掉** —— 編號和箭頭直接不見
+     （auditor 2026-11-18）。所以每一處都先寫一條**沒有** `/ ""` 的當後備：
+     舊瀏覽器用第一條（看得到符號，報讀軟體會念出來），
+     新瀏覽器用第二條（看得到符號，報讀軟體不念）。 */
+  .link-arrow::after { content: "\2002\2192"; }
   .link-arrow::after { content: "\2002\2192" / ""; }
 
   /* 規格表 */
@@ -187,7 +193,8 @@
      **沒有** U+2003（實測，tools/fonts 會報），照字面寫的話每一個區塊小標
      都會為了那一個空白退回系統字。`::before` 的內容不在 innerText 裡，
      所以這個改法和 copy-diff 無關。 */
-  .tag::before { counter-increment: sec; content: counter(sec, decimal-leading-zero) / ""; margin-inline-end: 1em; }
+  .tag::before { counter-increment: sec; content: counter(sec, decimal-leading-zero); margin-inline-end: 1em; }
+  .tag::before { content: counter(sec, decimal-leading-zero) / ""; }
   h2 { font-weight: 700; }
   .lang-zh h2 { font-size: 24px; line-height: 1.4; } .lang-en h2 { font-size: 24px; line-height: 1.25; }
   @media (min-width: 600px)  { .lang-zh h2, .lang-en h2 { font-size: 28px; } }
@@ -245,7 +252,8 @@
   /* 流程節點的 span 不加 .inline，作用中的語言靠 [data-lang] 機制本身變成 block；
      不要另外寫 .node > span { display:block }：權重比 [data-lang]{display:none} 高，會讓中英兩種字同時出現（11-17 樣張踩過，copy-diff 抓到）。 */
   .lang-en .node > span::first-letter { text-transform: uppercase; }   /* 只改顯示，字本身照抄 */
-  .node::before { counter-increment: node; content: counter(node, decimal-leading-zero) / ""; display: block; font: 500 12px/1 var(--f-mono); color: var(--blue); margin-bottom: 6px; }
+  .node::before { counter-increment: node; content: counter(node, decimal-leading-zero); display: block; font: 500 12px/1 var(--f-mono); color: var(--blue); margin-bottom: 6px; }
+  .node::before { content: counter(node, decimal-leading-zero) / ""; }
   .node:not(:last-child)::after {
     content: ""; position: absolute; width: 28px; height: 12px;
     background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 12'%3E%3Cpath d='M0 6H25M20 1.5 26 6 20 10.5' fill='none' stroke='%23E9A23B' stroke-width='1.6'/%3E%3C/svg%3E") no-repeat center / contain;

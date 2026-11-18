@@ -20,13 +20,13 @@ python3 tools/fonts/subset_fonts.py --check-only # 只驗涵蓋
 
 ## 來源（OFL 1.1）
 
-從 `github.com/google/fonts` 取得，2026-11-18。
+從 `github.com/google/fonts` 取得，2026-11-18，**釘 commit**（`main` 會變，同一條指令哪天會抓到不同的位元組）。
 
 | 來源檔 | sha256 | 取自 |
 |---|---|---|
-| `IBMPlexSans[wdth,wght].ttf` | `3b031aa4216174205bd8471f88a49b91f093169e9e87bd5262242bc5967fe2e3` | `ofl/ibmplexsans/` |
-| `IBMPlexMono-Medium.ttf` | `a9b4c49bb299e05b5f6c481e7fb5e78943d2793249a0c8874ab574a2d1ea6755` | `ofl/ibmplexmono/` |
-| `NotoSansTC[wght].ttf` | `864727d210d54f2537bbe23b3a839436c3992af72de9322af5270897246bd44f` | `ofl/notosanstc/` |
+| `IBMPlexSans[wdth,wght].ttf` | `3b031aa4216174205bd8471f88a49b91f093169e9e87bd5262242bc5967fe2e3` | `8409f033cd7d:ofl/ibmplexsans/` |
+| `IBMPlexMono-Medium.ttf` | `a9b4c49bb299e05b5f6c481e7fb5e78943d2793249a0c8874ab574a2d1ea6755` | `633f3200539c:ofl/ibmplexmono/` |
+| `NotoSansTC[wght].ttf` | `864727d210d54f2537bbe23b3a839436c3992af72de9322af5270897246bd44f` | `b950a7257470:ofl/notosanstc/` |
 
 來源字型**不進 repo**（Noto 那一個就 11 MB），放在 `tools/fonts/src/`，
 由 `.gitignore` 擋住。要重做子集時照 `tools/fonts/README.md` 重新下載，
@@ -40,14 +40,18 @@ sha256 對得上才算同一份。
 
 | 檔 | 大小 | sha256 |
 |---|---|---|
-| `ibm-plex-sans-400.woff2` | 16.4 KB | `999b76af0b010125…` |
-| `ibm-plex-sans-600.woff2` | 17.2 KB | `7ab8cd4f16969c68…` |
-| `ibm-plex-mono-500.woff2` | 11.8 KB | `16a8aec04224b42c…` |
-| `noto-sans-tc-400.woff2` | 66.6 KB | `1caa42e4d9bc23b9…` |
-| `noto-sans-tc-700.woff2` | 68.0 KB | `47365fbefbcfd811…` |
-| **合計** | **180.2 KB** | 預算 400 KB（規格 §8），還剩 219.8 KB |
+| `ibm-plex-sans-400.woff2` | 16.4 KB | `7c6f4fd9d5a193f4…` |
+| `ibm-plex-sans-600.woff2` | 17.2 KB | `d763f3cff741e73a…` |
+| `ibm-plex-mono-500.woff2` | 11.8 KB | `c9784aa28b6f6a79…` |
+| `noto-sans-tc-400.woff2` | 66.6 KB | `561f7f4d0cfbf3d2…` |
+| `noto-sans-tc-700.woff2` | 68.0 KB | `6bae9762359a13b7…` |
+| **合計** | **180.1 KB** | 預算 400 KB（規格 §8），還剩 219.9 KB |
 
-重跑一次會得到不同的 sha256（子集工具不保證位元組重現），**涵蓋和大小才是驗收標準**。
+🔴 **重跑會得到逐位元組相同的檔**（實測兩次）。這靠的是腳本開頭設的
+`SOURCE_DATE_EPOCH` —— 沒有它的話，fontTools 會在存檔時把 `head.modified`
+寫成「現在」，每次的 sha256 都不一樣。
+⚠ **直接寫 `font["head"].modified = 0` 沒有用**，存檔時會被覆寫掉；
+我先那樣做過，兩次跑出來還是差 11 秒。
 
 ## 這個子集涵蓋什麼
 

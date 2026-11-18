@@ -40,10 +40,19 @@ GitHub Pages 的 repo 不划算，所以 `src/` 由 `.gitignore` 擋住。
 
 ```sh
 mkdir -p tools/fonts/src && cd tools/fonts/src
-B=https://raw.githubusercontent.com/google/fonts/main/ofl
-curl -LO "$B/ibmplexsans/IBMPlexSans%5Bwdth%2Cwght%5D.ttf"
-curl -LO "$B/ibmplexmono/IBMPlexMono-Medium.ttf"
-curl -LO "$B/notosanstc/NotoSansTC%5Bwght%5D.ttf"
+R=https://raw.githubusercontent.com/google/fonts
+# 🔴 **用 -o 指定檔名，不要用 -LO。** `-LO` 會照 URL 存成
+#    `IBMPlexSans%5Bwdth%2Cwght%5D.ttf`（百分號編碼沒有被還原），
+#    而 subset_fonts.py 找的是 `IBMPlexSans[wdth,wght].ttf` → FileNotFoundError。
+#    （auditor 2026-11-18 實測。）
+# 🔴 **釘 commit，不要用 main。** main 會變，哪天上游更新字型，
+#    「同一條指令」就會抓到不同的位元組，而 sha256 的表會突然對不上。
+curl -L -o 'IBMPlexSans[wdth,wght].ttf' \
+  "$R/8409f033cd7d/ofl/ibmplexsans/IBMPlexSans%5Bwdth,wght%5D.ttf"
+curl -L -o 'IBMPlexMono-Medium.ttf' \
+  "$R/633f3200539c/ofl/ibmplexmono/IBMPlexMono-Medium.ttf"
+curl -L -o 'NotoSansTC[wght].ttf' \
+  "$R/b950a7257470/ofl/notosanstc/NotoSansTC%5Bwght%5D.ttf"
 shasum -a 256 *.ttf          # 和 fonts/README.md 的表對一次
 ```
 

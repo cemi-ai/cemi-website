@@ -32,6 +32,17 @@ import unicodedata
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 
+# 🔴 **讓輸出可以重現**（auditor 2026-11-18）。
+#   不設的話每次重跑只有 `head.modified` 不同（實測兩次相差 11 秒），
+#   輸出的 sha256 就會變 —— 於是「重跑看看有沒有變」量不到東西。
+#
+#   ⚠ **直接寫 `font["head"].modified = 0` 沒有用**：fontTools 在存檔時會把
+#     那一欄覆寫成「現在」。我先那樣做，兩次跑出來還是差 11 秒才發現。
+#     正確的做法是 `SOURCE_DATE_EPOCH` —— fontTools（和其他可重現建置的
+#     工具）都認這個環境變數。
+#   用 2026-11-18 00:00:00 UTC；外面有設就尊重外面的。
+os.environ.setdefault("SOURCE_DATE_EPOCH", "1763424000")
+
 #: 拉丁字型要涵蓋的範圍（規格 §8）。這是**固定清單**，不是從頁面推出來的：
 #: 版面上的箭頭、引號、破折號有些是 CSS 產生的，`innerText` 裡看不到。
 LATIN = (
