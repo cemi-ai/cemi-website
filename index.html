@@ -590,6 +590,8 @@
      函式名不可以改：copy-diff.mjs 和 measure.mjs 都靠 setLang() 切語言。 */
   function setLang(lang) {
     document.body.className = 'lang-' + lang;
+    /* 同步 <html lang>，讓報讀軟體和瀏覽器的翻譯判斷正確。 */
+    document.documentElement.lang = lang === 'zh' ? 'zh-TW' : 'en';
     document.getElementById('btn-en').classList.toggle('active', lang === 'en');
     document.getElementById('btn-zh').classList.toggle('active', lang === 'zh');
     // The map's accessible name lives in an attribute, so it cannot use the
