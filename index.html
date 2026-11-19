@@ -590,11 +590,7 @@
      函式名不可以改：copy-diff.mjs 和 measure.mjs 都靠 setLang() 切語言。 */
   function setLang(lang) {
     document.body.className = 'lang-' + lang;
-    /* 🔴 `<html lang>` 也要跟著換。
-       這一行以前沒有，所以切到中文之後整頁仍然宣告 lang="en" ——
-       報讀軟體會用英文的發音規則念中文、瀏覽器的翻譯提示也會判錯，
-       而**畫面上完全看不出來**（字是對的，只有宣告錯了）。
-       zh-TW 是沿用這一頁既有的寫法（og:locale:alternate 就是 zh_TW）。 */
+    /* 同步 <html lang>，讓報讀軟體和瀏覽器的翻譯判斷正確。 */
     document.documentElement.lang = lang === 'zh' ? 'zh-TW' : 'en';
     document.getElementById('btn-en').classList.toggle('active', lang === 'en');
     document.getElementById('btn-zh').classList.toggle('active', lang === 'zh');
